@@ -8,7 +8,6 @@ const LoginPage = ({ onGoToRegister }) => {
   const [loginLoading, setLoginLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [selectedRole, setSelectedRole] = useState('user'); // State for dropdown
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
@@ -27,11 +26,11 @@ const LoginPage = ({ onGoToRegister }) => {
     <Container className="d-flex justify-content-center align-items-center min-vh-100 bg-white p-4">
       <Card className="shadow-sm p-4" style={{ maxWidth: '400px', width: '100%' }}>
         <Card.Title as="h2" className="text-center mb-4">
-          <Image src="/images/Logo_Navbar.png" width={150} alt="Logo" />
+          <Image src="/images/Logo_Navbar.png" width={150} alt="Mould Connect" />
         </Card.Title>
         <Card.Text className="text-center text-muted mb-4">Sign in to continue.</Card.Text>
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3">
+          {/* <Form.Group className="mb-3">
             <Form.Label htmlFor="signInAs">Sign in as</Form.Label>
             <Form.Select
               id="signInAs"
@@ -41,7 +40,7 @@ const LoginPage = ({ onGoToRegister }) => {
               <option value="user">User</option>
               <option value="admin">Admin</option>
             </Form.Select>
-          </Form.Group>
+          </Form.Group> */}
           <Form.Group className="mb-3">
             <Form.Label htmlFor="email">Email ID</Form.Label>
             <Form.Control

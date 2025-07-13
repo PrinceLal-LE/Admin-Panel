@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import { Container, Card, Form, Button, Alert, Spinner ,Image } from 'react-bootstrap';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 
@@ -65,7 +65,10 @@ const RegisterPage = ({ onRegisterSuccess, onGoToLogin }) => {
     return (
         <Container className="d-flex justify-content-center align-items-center min-vh-100 bg-white p-4">
             <Card className="shadow-sm p-4" style={{ maxWidth: '400px', width: '100%' }}>
-                <Card.Title as="h2" className="text-center mb-2">Purple</Card.Title>
+                <Card.Title as="h2" className="text-center mb-2">Mould Connect
+                <Image src="/images/Logo_Navbar.png" width={150} alt="Mould Connect" />
+                </Card.Title>
+                
                 <Card.Text className="text-center text-muted mb-4">New here?<br />Signing up is easy, it only takes a few steps</Card.Text>
                 <Form onSubmit={handleSubmit}>
 
