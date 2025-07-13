@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Card, Button, Alert } from 'react-bootstrap';
-import { useAuth } from '../App'; // Import useAuth from App.js
+import { useAuth } from '../AuthProvider'; // Import useAuth from App.js
 
 const DashboardPage = () => {
   const { user, logout, isAdmin } = useAuth();

@@ -89,3 +89,41 @@ exports.loginUser = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
+
+exports.registerUser = async (req, res) => {
+  const { username, password, role } = req.body;
+
+  try {
+    // Check if user already exists
+    let user = await User.findOne({ username });
+    if (user) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+
+    // Create a new user instance
+    user = new User({
+      username,
+      password,
+      role: role || 'user', // Default to 'user' role for registration
+    });
+
+    // Save the user to the database (password hashing happens in pre-save hook)
+    await user.save();
+
+    // Generate token for the newly registered user
+    const token = generateToken(user._id, user.role);
+
+    res.status(201).json({
+      message: 'User registered successfully',
+      user: {
+        id: user._id,
+        username: user.username,
+        role: user.role,
+      },
+      token,
+    });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+};

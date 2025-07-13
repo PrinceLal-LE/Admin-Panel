@@ -1,6 +1,6 @@
 // backend/models/User.js
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const argon2 = require('argon2'); // Import argon2
 
 const UserSchema = new mongoose.Schema({
   username: {
@@ -21,25 +21,37 @@ const UserSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-  },
+  }
+}, {
+  collection: 'Ad_users' // Explicitly set the collection name to Ad_users
 });
 
-// Hash password before saving the user
+// Hash password before saving the user using argon2
 UserSchema.pre('save', async function (next) {
-  // Only hash if the password has been modified (or is new)
   if (!this.isModified('password')) {
     return next();
   }
-  // Generate a salt
-  const salt = await bcrypt.genSalt(10);
-  // Hash the password with the salt
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
+  try {
+    this.password = await argon2.hash(this.password, {
+      type: argon2.argon2id,
+      memoryCost: 2 ** 16,     // 64 MB
+      timeCost: 3,            // Iterations
+      parallelism: 1          // Threads
+    });
+    next();
+  } catch (err) {
+    next(err); // Pass error to the next middleware
+  }
 });
 
-// Method to compare entered password with hashed password in the database
+// Method to compare entered password with hashed password in the database using argon2
 UserSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+  try {
+    return await argon2.verify(this.password, enteredPassword); // Use argon2.verify
+  } catch (err) {
+    console.error("Password verification error:", err);
+    return false;
+  }
 };
 
 module.exports = mongoose.model('User', UserSchema);

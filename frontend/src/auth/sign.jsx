@@ -1,21 +1,26 @@
 import React, { useState } from 'react';
 import { Container, Card, Form, Button, Alert, Spinner, Image } from 'react-bootstrap';
-import { useAuth } from '../App'; // Import useAuth from App.js
+import { useAuth } from '../AuthProvider'; // Import useAuth from App.js
 
-const LoginPage = () => {
-  const { login, loading } = useAuth();
+const LoginPage = ({ onGoToRegister }) => {
+  // const { login, loading } = useAuth();
+  const { login } = useAuth();
+  const [loginLoading, setLoginLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [selectedRole, setSelectedRole] = useState('user'); // State for dropdown
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // This should prevent the page reload
+    // Clear previous errors only when a new login attempt starts
     setError('');
+    setLoginLoading(true);
     const result = await login(email, password);
     if (!result.success) {
       setError(result.message);
     }
+    setLoginLoading(false);
   };
 
   return (
@@ -57,14 +62,23 @@ const LoginPage = () => {
               required
             />
           </Form.Group>
-          {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
+          {error && (
+            <Alert
+              key="login-error-alert" // Keep the unique key
+              variant="danger"
+              className="mt-3" // Bootstrap class for margin-top
+            // Removed aggressive inline styles
+            >
+              {error}
+            </Alert>
+          )}
           <Button
             variant="primary"
             type="submit"
             className="w-100"
-            disabled={loading}
+            disabled={loginLoading}
           >
-            {loading ? (
+            {loginLoading ? (
               <>
                 <Spinner
                   as="span"
@@ -81,6 +95,16 @@ const LoginPage = () => {
             )}
           </Button>
         </Form>
+        <Card.Text className="text-center text-muted mt-4">
+          {/* Don't have an account? <a href="#" onClick={onGoToRegister}>Create</a> */}
+          Don't have an account? <button
+            type="button"
+            onClick={onGoToRegister}
+            className="btn btn-link p-0"
+          >
+            Create
+          </button>
+        </Card.Text>
       </Card>
     </Container>
   );

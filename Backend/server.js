@@ -14,8 +14,25 @@ connectDB();
 
 const app = express();
 
+// Define allowed origins for CORS (for production)
+const allowedOrigins = [
+  'http://localhost:3000', // Your frontend development URL
+  'https://your-deployed-frontend.com' // Replace with your actual deployed frontend URL
+];
+
 // Middleware
-app.use(cors()); // Enable CORS for all origins (for development)
+app.use(cors({
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+  credentials: true, // Allow cookies to be sent
+  optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
+}));
 app.use(express.json()); // Body parser for JSON data
 
 // Routes
