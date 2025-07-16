@@ -6,6 +6,7 @@ import { AuthProvider, useAuth } from './AuthProvider'; // Import AuthProvider +
 import LoginPage from './auth/sign';
 import RegisterPage from './auth/register';
 import DashboardPage from './dashboard/home';
+import DashboardLayout from './dashboard/layout';
 
 const AppRouter = () => {
   const { user, initializing } = useAuth(); // using new 'initializing' flag
@@ -25,7 +26,11 @@ const AppRouter = () => {
   }
 
   if (user) {
-    return <DashboardPage />;
+    return (
+      <DashboardLayout>
+        <DashboardPage />
+      </DashboardLayout>
+      );
   }
 
   return showRegister ? (
